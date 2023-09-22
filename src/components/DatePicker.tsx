@@ -1,12 +1,16 @@
-import * as React from 'react';
-import { DatePicker, IDatePickerStyles, IconButton } from '@fluentui/react';
-import { registerIcons } from '@fluentui/react';
-import { ArrowUp12Regular, ArrowDown12Regular } from '@fluentui/react-icons';
 
-registerIcons({
-  icons: {
-    Up: <ArrowUp12Regular />,
-    Down: <ArrowDown12Regular />,
+import * as React from "react";
+import { DatePicker } from "@fluentui/react-datepicker-compat";
+import { Field,  makeStyles } from "@fluentui/react-components";
+
+
+
+
+const useStyles = makeStyles({
+  control: {
+    maxWidth: "300px",
+   
+    
   },
 });
 
@@ -16,20 +20,13 @@ interface CustomDatePickerProps {
   disabled: boolean;
 }
 
-const datePickerContainerStyles: React.CSSProperties = {
-  display: 'flex',
-  alignItems: 'center', // Align the items vertically
-};
-
-const iconButtonStyles: React.CSSProperties = {
-  marginRight: '8px',
-};
-
-const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
+export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
   value,
   onChange,
   disabled,
 }) => {
+  const styles = useStyles();
+
   const handleDateChange = (date: Date | null | undefined) => {
     if (date) {
       const modifiedDate = new Date(date);
@@ -37,17 +34,20 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
       const isoDate = modifiedDate.toISOString();
       onChange(isoDate);
     } else {
-      onChange('');
+      onChange("");
     }
   };
 
+  const dateValue = value ? new Date(value) : undefined;
+
   const formatDate = (date?: Date): string => {
-    if (!date || isNaN(date.getTime())) return ''; // Check for an invalid date
-  
+    if (!date || isNaN(date.getTime())) return ""; // Check for an invalid date
+
     const utcDate = new Date(date.toUTCString());
     const isoDate = utcDate.toISOString().slice(0, 19);
     return isoDate;
   };
+
   // Function to handle incrementing the hour
   const handleIncrementHour = () => {
     if (value) {
@@ -66,28 +66,30 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
     }
   };
 
-  const dateValue = value ? new Date(value) : undefined
+    // Function to handle key press events
+    const handleKeyPress = (e: React.KeyboardEvent) => {
+      if (e.key === "ArrowUp") {
+        e.preventDefault(); 
+        handleIncrementHour();
+      } else if (e.key === "ArrowDown") {
+        e.preventDefault();
+        handleDecrementHour();
+      }
+    };
+
   return (
-    <div style={datePickerContainerStyles}>
-      <IconButton
-        iconProps={{ iconName: 'Up' }}
-        onClick={() => handleIncrementHour()}
-        style={iconButtonStyles}
-      />
+    <Field label="Select a date">
+    
       <DatePicker
-        value={ dateValue } 
+        value={dateValue}
+        size="medium"
+        className={styles.control}
         onSelectDate={handleDateChange}
-        formatDate={formatDate}
         placeholder="YYYY-MM-DDTHH:mm:SS"
+        formatDate={formatDate}
         disabled={disabled}
+        onKeyDown={handleKeyPress} 
       />
-      <IconButton
-        iconProps={{ iconName: 'Down' }}
-        onClick={() => handleDecrementHour()}
-        style={iconButtonStyles}
-      />
-    </div>
+    </Field>
   );
 };
-
-export default CustomDatePicker;
