@@ -1,15 +1,14 @@
-// App.js
-import { useState } from 'react';
-import './App.css';
-import {CustomDatePicker} from './components/DatePicker';
+import { useState } from "react";
+import "./App.css";
+import { CustomDatePicker } from "./components/DatePicker";
 
 function App() {
-  const [selectedDate, setSelectedDate] = useState(''); // Corrected date
-  const [isDisabled, setIsDisabled] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(""); // Corrected date
+  const [isDisabled] = useState(false);
 
   const handleDateChange = (value: string) => {
     // Handle the date change here
-    console.log('Selected Date:', value);
+    console.log("Selected Date:", value);
     setSelectedDate(value);
   };
 
@@ -19,7 +18,6 @@ function App() {
       onChange={handleDateChange}
       disabled={isDisabled} // Use the isDisabled state variable
     />
-    // <Default/>
   );
 }
 
