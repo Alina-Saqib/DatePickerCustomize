@@ -1,16 +1,20 @@
-
 import * as React from "react";
 import { DatePicker } from "@fluentui/react-datepicker-compat";
-import { Field,  makeStyles } from "@fluentui/react-components";
-
-
-
+import { Field, makeStyles } from "@fluentui/react-components";
+import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 
 const useStyles = makeStyles({
   control: {
     maxWidth: "300px",
-   
-    
+  },
+  arrowIcons: {
+    display: "flex",
+    alignItems: "center",
+  },
+  arrowIcon: {
+    cursor: "pointer",
+    marginTop: "25px",
+    paddingLeft: "5px",
   },
 });
 
@@ -41,8 +45,7 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
   const dateValue = value ? new Date(value) : undefined;
 
   const formatDate = (date?: Date): string => {
-    if (!date || isNaN(date.getTime())) return ""; // Check for an invalid date
-
+    if (!date || isNaN(date.getTime())) return "";
     const utcDate = new Date(date.toUTCString());
     const isoDate = utcDate.toISOString().slice(0, 19);
     return isoDate;
@@ -66,30 +69,23 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
     }
   };
 
-    // Function to handle key press events
-    const handleKeyPress = (e: React.KeyboardEvent) => {
-      if (e.key === "ArrowUp") {
-        e.preventDefault(); 
-        handleIncrementHour();
-      } else if (e.key === "ArrowDown") {
-        e.preventDefault();
-        handleDecrementHour();
-      }
-    };
-
   return (
-    <Field label="Select a date">
-    
-      <DatePicker
-        value={dateValue}
-        size="medium"
-        className={styles.control}
-        onSelectDate={handleDateChange}
-        placeholder="YYYY-MM-DDTHH:mm:SS"
-        formatDate={formatDate}
-        disabled={disabled}
-        onKeyDown={handleKeyPress} 
-      />
-    </Field>
+    <div style={{ display: "flex" }}>
+      <Field label="Select a date">
+        <DatePicker
+          value={dateValue}
+          size="medium"
+          className={styles.control}
+          onSelectDate={handleDateChange}
+          placeholder="YYYY-MM-DDTHH:mm:SS"
+          formatDate={formatDate}
+          disabled={disabled}
+        />
+      </Field>
+      <div className={styles.arrowIcons}>
+        <ArrowUpOutlined className={styles.arrowIcon} onClick={handleIncrementHour} />
+        <ArrowDownOutlined className={styles.arrowIcon} onClick={handleDecrementHour} />
+      </div>
+    </div>
   );
 };
