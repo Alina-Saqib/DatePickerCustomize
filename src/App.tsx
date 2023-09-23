@@ -1,23 +1,24 @@
 import { useState } from "react";
 import "./App.css";
-import { CustomDatePicker } from "./components/DatePicker";
+import CustomDatePicker from "./components/CustomDatePicker";
+
 
 function App() {
   const [selectedDate, setSelectedDate] = useState(""); // Corrected date
   const [isDisabled] = useState(false);
 
   const handleDateChange = (value: string) => {
-    // Handle the date change here
+  
     console.log("Selected Date:", value);
     setSelectedDate(value);
   };
 
   return (
-    <CustomDatePicker
-      value={selectedDate}
-      onChange={handleDateChange}
-      disabled={isDisabled} // Use the isDisabled state variable
-    />
+   
+    <CustomDatePicker 
+    value= {selectedDate}
+    onChange={handleDateChange}
+    disabled={isDisabled}/>
   );
 }
 
