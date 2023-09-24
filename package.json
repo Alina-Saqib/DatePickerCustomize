@@ -13,7 +13,7 @@
     "@ant-design/icons": "^5.2.6",
     "@fluentui/react-components": "9.23.1",
     "@fluentui/react-datepicker-compat": "^0.3.13",
-    "antd": "^5.9.2",
+    "antd": "5.6.3",
     "date-fns": "^2.30.0",
     "moment": "^2.29.4",
     "react": "^18.2.0",
