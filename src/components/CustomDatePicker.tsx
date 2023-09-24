@@ -1,9 +1,11 @@
-import { Input, Space } from "antd";
+import { Input, Space, Typography } from "antd";
 import { CalendarOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import { Calendar } from "antd";
 import dayjs from "dayjs";
 
+
+const { Text } = Typography;
 interface CustomDatePickerProps {
   value: string;
   onChange: (value: string) => void;
@@ -17,13 +19,19 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
 }) => {
   const [showCalendar, setShowCalendar] = useState(false);
   const [inputValue, setInputValue] = useState(value);
+  const [invalidDate, setInvalidDate] = useState(false);
+ 
 
   const toggleCalendar = () => {
     setShowCalendar(!showCalendar);
   };
 
   const formatSelectedDate = (date: Date) => {
-    if (!date || isNaN(date.getTime())) return "invalid";
+    if (!date || isNaN(date.getTime())) {
+        setInvalidDate(true);
+        return "";
+      }
+      setInvalidDate(false);
     const year = date.getFullYear().toString().padStart(4, "0");
     const month = (date.getMonth() + 1).toString().padStart(2, "0");
     const day = date.getDate().toString().padStart(2, "0");
@@ -43,15 +51,17 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
     const formattedDate = formatSelectedDate(jsDate);
     onChange(formattedDate);
     setInputValue(formattedDate);
-    setShowCalendar(false);
+    // setShowCalendar(false);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
     const inputValue = e.target.value;
     setInputValue(inputValue);
   };
 
   const handleInputblur = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
     const inputValue = e.target.value;
     const date = new Date(inputValue);
     const formattedDate = formatSelectedDate(date);
@@ -60,16 +70,20 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
   };
 
   const handleIncrementHour = (e: any) => {
-    const inputValue = e.target.value;
+     e.preventDefault();
+     
+      const inputValue = e.target.value;
     if (inputValue) {
       const dateValue = new Date(inputValue);
       dateValue.setHours(dateValue.getHours() + 1);
       setInputValue(formatSelectedDate(dateValue));
       onChange(formatSelectedDate(dateValue));
     }
+   
   };
 
   const handleDecrementHour = (e: any) => {
+    e.preventDefault();
     const inputValue = e.target.value;
     if (inputValue) {
       const dateValue = new Date(inputValue);
@@ -81,18 +95,22 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
 
   const handleKeyPress = (e: any) => {
     if (e.key === "ArrowUp") {
+
       handleIncrementHour(e);
     } else if (e.key === "ArrowDown") {
       handleDecrementHour(e);
     } else if (e.key === "Enter") {
       handleInputblur(e);
+      setShowCalendar(false)
     }
   };
+
+ ;
 
   return (
     <div>
       <Space direction="vertical">
-        <Input
+        <Input 
           value={inputValue}
           placeholder="YYYY-MM-DDTHH:mm:SS"
           suffix={<CalendarOutlined onClick={toggleCalendar} />}
@@ -102,7 +120,11 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
           size="large"
           style={{ width: "300px" }}
           disabled={disabled}
+         
         />
+        {invalidDate && (
+          <Text type="danger">Invalid date format. Please enter a valid date.</Text>
+        )}
         {showCalendar && (
           <Calendar
             onSelect={handleDateSelect}
