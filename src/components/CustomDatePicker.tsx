@@ -1,6 +1,6 @@
-import { Input, Space, Typography } from "antd";
+import { Input, InputRef, Space, Typography } from "antd";
 import { CalendarOutlined } from "@ant-design/icons";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Calendar } from "antd";
 import dayjs from "dayjs";
 
@@ -20,6 +20,7 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
   const [showCalendar, setShowCalendar] = useState(false);
   const [inputValue, setInputValue] = useState(value);
   const [invalidDate, setInvalidDate] = useState(false);
+  const inputRef = useRef<InputRef>(null)
  
 
   const toggleCalendar = () => {
@@ -61,6 +62,7 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
   };
 
   const handleInputblur = (e: React.ChangeEvent<HTMLInputElement>) => {
+    
     e.preventDefault();
     const inputValue = e.target.value;
     const date = new Date(inputValue);
@@ -70,9 +72,8 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
   };
 
   const handleIncrementHour = (e: any) => {
-     e.preventDefault();
-     
-      const inputValue = e.target.value;
+  
+    const inputValue = e.target.value;
     if (inputValue) {
       const dateValue = new Date(inputValue);
       dateValue.setHours(dateValue.getHours() + 1);
@@ -83,7 +84,6 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
   };
 
   const handleDecrementHour = (e: any) => {
-    e.preventDefault();
     const inputValue = e.target.value;
     if (inputValue) {
       const dateValue = new Date(inputValue);
@@ -94,8 +94,9 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
   };
 
   const handleKeyPress = (e: any) => {
+    e.preventDefault();
     if (e.key === "ArrowUp") {
-
+      e.preventDefault();
       handleIncrementHour(e);
     } else if (e.key === "ArrowDown") {
       handleDecrementHour(e);
@@ -120,6 +121,7 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
           size="large"
           style={{ width: "300px" }}
           disabled={disabled}
+          ref={inputRef}
          
         />
         {invalidDate && (
